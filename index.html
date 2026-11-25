@@ -8,10 +8,13 @@
 <meta property="og:title" content="Medestander-kaarten">
 <meta property="og:description" content="Zestien dagen, elke dag één actie die jij zelf kunt ondernemen. Orange the World 2026.">
 <meta property="og:image" content="assets/kaart-01-voorkant.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;800&family=Lora:ital,wght@1,500&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/league-spartan-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Fonts uit Hiltje's eigen fontmap (Website/Fonts), zelf gehost: geen verbinding met Google */
+  @font-face{font-family:'League Spartan';src:url('assets/fonts/league-spartan-var.woff2') format('woff2');
+    font-weight:100 900;font-style:normal;font-display:swap}
+  @font-face{font-family:'Lora';src:url('assets/fonts/lora-italic-var.woff2') format('woff2');
+    font-weight:400 700;font-style:italic;font-display:swap}
   :root{
     --oranje:#FF4E00;
     --oranje-tekst:#D94200;
