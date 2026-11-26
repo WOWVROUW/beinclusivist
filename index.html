@@ -8,10 +8,11 @@
 <meta property="og:title" content="Medestander-kaarten">
 <meta property="og:description" content="Zestien dagen, elke dag één actie die jij zelf kunt ondernemen. Orange the World 2026.">
 <meta property="og:image" content="assets/kaart-01-voorkant.png">
-<link rel="preload" href="assets/fonts/league-spartan-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/hanken-grotesk-var.woff2" as="font" type="font/woff2" crossorigin>
 <style>
-  /* Fonts uit Hiltje's eigen fontmap (Website/Fonts), zelf gehost: geen verbinding met Google */
-  @font-face{font-family:'League Spartan';src:url('assets/fonts/league-spartan-var.woff2') format('woff2');
+  /* Fonts uit Hiltje's eigen fontmap (Website/Fonts), zelf gehost: geen verbinding met Google.
+     Hanken Grotesk voor koppen en tekst (terugkerend over de drie merken), Lora cursief voor citaten. */
+  @font-face{font-family:'Hanken Grotesk';src:url('assets/fonts/hanken-grotesk-var.woff2') format('woff2');
     font-weight:100 900;font-style:normal;font-display:swap}
   @font-face{font-family:'Lora';src:url('assets/fonts/lora-italic-var.woff2') format('woff2');
     font-weight:400 700;font-style:italic;font-display:swap}
@@ -22,12 +23,12 @@
     --zwart:#141414;
     --wit:#FFFFFF;
     --zacht:#FFF4EE;
-    --spartan:'League Spartan',Arial,sans-serif;
+    --sans:'Hanken Grotesk',Arial,sans-serif;
     --lora:'Lora',Georgia,serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
-  body{font-family:var(--spartan);color:var(--zwart);background:var(--wit);font-size:19px;line-height:1.5}
+  body{font-family:var(--sans);color:var(--zwart);background:var(--wit);font-size:19px;line-height:1.5}
   a{color:inherit}
   .wrap{max-width:1040px;margin:0 auto;padding:0 20px}
   .label{font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase}
@@ -65,6 +66,34 @@
   .ringen li::before{content:"Ring " counter(ring);font-weight:700;font-size:14px;letter-spacing:.16em;text-transform:uppercase}
   .ringen li span{font-weight:800;font-size:22px;line-height:1.05;text-transform:uppercase}
   .ringen li small{font-size:15px;opacity:.9}
+
+  .trek{background:var(--zacht);text-align:center}
+  .trek p{max-width:34em;margin:0 auto}
+  .mk{display:flex;flex-direction:column;align-items:center;gap:24px;margin-top:32px}
+  .mk [hidden]{display:none!important}
+  .mk-kaart{appearance:none;border:0;padding:0;background:none;cursor:pointer;width:min(340px,80vw);aspect-ratio:1080/1350;perspective:1600px}
+  .mk-kaart:focus-visible{outline:3px solid var(--aubergine);outline-offset:8px;border-radius:20px}
+  .mk-binnen{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;
+    transition:transform .9s cubic-bezier(.3,.7,.2,1)}
+  .mk:not(.open) .mk-kaart:hover .mk-binnen{transform:translateY(-6px) rotate(-1.5deg)}
+  .mk.open .mk-binnen{transform:rotateY(180deg)}
+  .mk.schud .mk-binnen{animation:mkSchud .14s ease-in-out 4 alternate}
+  @keyframes mkSchud{from{transform:rotate(-3deg) translateX(-6px)}to{transform:rotate(3deg) translateX(6px)}}
+  .mk-zijde{position:absolute;inset:0;display:block;border-radius:16px;overflow:hidden;backface-visibility:hidden;
+    -webkit-backface-visibility:hidden;box-shadow:0 22px 44px -20px rgba(36,20,28,.55)}
+  .mk-zijde img{width:100%;height:100%;object-fit:cover;display:block}
+  .mk-voor{transform:rotateY(180deg)}
+  .mk-knoppen{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+  .mk-knoppen .knop{margin-top:0;border:0;cursor:pointer;font-family:inherit}
+  .knop.rand{background:transparent;color:var(--aubergine);box-shadow:inset 0 0 0 2px var(--aubergine)}
+  .knop.rand:hover,.knop.rand:focus{background:var(--aubergine);color:var(--wit)}
+  .mk-status{font-size:17px;min-height:1.5em}
+  .mk-minis{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .mk-minis button{appearance:none;border:0;padding:0;background:none;cursor:pointer;width:64px;border-radius:8px;overflow:hidden;
+    box-shadow:0 6px 14px -8px rgba(36,20,28,.6)}
+  .mk-minis button[aria-current="true"]{outline:3px solid var(--aubergine);outline-offset:3px}
+  .mk-minis img{width:100%;display:block}
+  @media (prefers-reduced-motion:reduce){ .mk-binnen{transition:none} .mk.schud .mk-binnen{animation:none} }
 
   .aanmelden{background:var(--aubergine);color:var(--wit);text-align:center}
   .aanmelden p{max-width:34em;margin:0 auto;font-size:20px}
@@ -142,6 +171,29 @@
     </div>
   </section>
 
+  <!-- Kaartentrekker: alleen kaarten die al verschenen zijn (kaart n vanaf 25 november + n-1) -->
+  <section class="trek" id="trek" aria-labelledby="trek-titel">
+    <div class="wrap">
+      <h2 id="trek-titel">Trek een kaart</h2>
+      <p>Klik op het deck. Je trekt een kaart uit de kaarten die tot nu toe verschenen zijn.</p>
+      <div class="mk">
+        <button class="mk-kaart" id="mk-kaart" type="button" aria-label="Trek een kaart">
+          <span class="mk-binnen">
+            <span class="mk-zijde mk-rug"><img src="assets/kaart-rug.png" alt=""></span>
+            <span class="mk-zijde mk-voor" id="mk-voor"></span>
+          </span>
+        </button>
+        <div class="mk-knoppen">
+          <button class="knop" id="mk-trek" type="button">Trek een kaart</button>
+          <button class="knop licht" id="mk-draai" type="button" hidden>Draai om</button>
+          <button class="knop rand" id="mk-nog" type="button" hidden>Nog een kaart</button>
+        </div>
+        <p class="mk-status" id="mk-status" aria-live="polite"></p>
+        <div class="mk-minis" id="mk-minis" aria-label="Kaarten die je al getrokken hebt"></div>
+      </div>
+    </div>
+  </section>
+
   <!-- Flodesk-formulier "Medestander Optin" op het aubergine vlak, verder Flodesk-stijl -->
   <section class="aanmelden" id="aanmelden" aria-label="Aanmelden voor de Medestander-kaarten">
     <div id="fd-form-6b06bf295664e35698254918"></div>
@@ -156,6 +208,90 @@
 </footer>
 
 <script>
+  /* Kaartentrekker. Kaart n verschijnt op 25 november + (n-1) dagen. Een kaart komt pas in het deck
+     als er ook een beeld van is (KLAAR). Nieuwe export? Zet het nummer in KLAAR en de PNG's in assets/. */
+  (function () {
+    var KLAAR = [1, 2];
+    var START = new Date(2026, 10, 25);            // 25 november 2026
+    var TEST = /[?&]kaartdatum=(\d{4})-(\d\d)-(\d\d)/.exec(location.search);
+    var nu = TEST ? new Date(+TEST[1], TEST[2] - 1, +TEST[3]) : new Date();
+    var dagen = Math.floor((new Date(nu.getFullYear(), nu.getMonth(), nu.getDate()) - START) / 864e5);
+    var deck = KLAAR.filter(function (n) { return n <= dagen + 1; });
+
+    var mk = document.querySelector('.mk'), voor = document.getElementById('mk-voor');
+    var kaartKnop = document.getElementById('mk-kaart'), trek = document.getElementById('mk-trek');
+    var draai = document.getElementById('mk-draai'), nog = document.getElementById('mk-nog');
+    var status = document.getElementById('mk-status'), minis = document.getElementById('mk-minis');
+    var getrokken = [], huidig = null, achterkant = false, bezig = false;
+
+    function nr(n) { return (n < 10 ? '0' : '') + n; }
+    function beeld(n, zijde) { return 'assets/kaart-' + nr(n) + '-' + zijde + '.png'; }
+    function laad(src) {
+      return new Promise(function (klaar) {
+        var i = new Image(); i.onload = function () { klaar(i); }; i.onerror = function () { klaar(null); }; i.src = src;
+      });
+    }
+    function toon(n, zijde) {
+      return laad(beeld(n, zijde)).then(function (img) {
+        voor.innerHTML = '';
+        if (img) { img.alt = 'Medestander-kaart ' + n + ', ' + zijde; voor.appendChild(img); }
+      });
+    }
+    function tekenMinis() {
+      minis.innerHTML = '';
+      getrokken.forEach(function (n) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.setAttribute('aria-label', 'Bekijk kaart ' + n);
+        if (n === huidig) b.setAttribute('aria-current', 'true');
+        b.innerHTML = '<img src="' + beeld(n, 'voorkant') + '" alt="">';
+        b.onclick = function () { huidig = n; achterkant = false; toon(n, 'voorkant'); bijwerken(); };
+        minis.appendChild(b);
+      });
+    }
+    function bijwerken() {
+      var over = deck.filter(function (n) { return getrokken.indexOf(n) < 0; }).length;
+      draai.hidden = huidig === null;
+      draai.textContent = achterkant ? 'Naar de voorkant' : 'Draai om';
+      nog.hidden = huidig === null || over === 0;
+      trek.hidden = huidig !== null;
+      status.textContent = huidig === null ? '' :
+        (over === 0 ? 'Je hebt alle ' + deck.length + ' kaarten gezien die er nu zijn.' : '');
+      tekenMinis();
+    }
+    function trekKaart() {
+      if (bezig) return;
+      var pot = deck.filter(function (n) { return getrokken.indexOf(n) < 0; });
+      if (!pot.length) return;
+      bezig = true;
+      var n = pot[Math.floor(Math.random() * pot.length)];
+      mk.classList.remove('open');
+      setTimeout(function () {
+        mk.classList.add('schud');
+        Promise.all([toon(n, 'voorkant'), new Promise(function (r) { setTimeout(r, 600); })]).then(function () {
+          mk.classList.remove('schud');
+          mk.classList.add('open');
+          getrokken.push(n); huidig = n; achterkant = false; bezig = false;
+          bijwerken();
+        });
+      }, mk.classList.contains('open') ? 500 : 0);
+    }
+    function draaiOm() {
+      if (huidig === null || bezig) return;
+      bezig = true;
+      mk.classList.remove('open');
+      achterkant = !achterkant;
+      setTimeout(function () {
+        toon(huidig, achterkant ? 'achterkant' : 'voorkant').then(function () {
+          mk.classList.add('open'); bezig = false; bijwerken();
+        });
+      }, 450);
+    }
+    if (!deck.length) { mk.hidden = true; return; }
+    kaartKnop.onclick = function () { huidig === null ? trekKaart() : draaiOm(); };
+    trek.onclick = trekKaart; nog.onclick = trekKaart; draai.onclick = draaiOm;
+    deck.forEach(function (n) { laad(beeld(n, 'voorkant')); });
+  })();
+
   (function(w, d, t, h, s, n) {
     if (d.querySelector('script[src*="flodesk"]')) return;
     w.FlodeskObject = n;
