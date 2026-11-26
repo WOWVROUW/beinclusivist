@@ -211,7 +211,7 @@
   /* Kaartentrekker. Kaart n verschijnt op 25 november + (n-1) dagen. Een kaart komt pas in het deck
      als er ook een beeld van is (KLAAR). Nieuwe export? Zet het nummer in KLAAR en de PNG's in assets/. */
   (function () {
-    var KLAAR = [1, 2];
+    var KLAAR = [1, 2, 3, 5, 6, 7, 8, 9, 10, 11];
     var START = new Date(2026, 10, 25);            // 25 november 2026
     var TEST = /[?&]kaartdatum=(\d{4})-(\d\d)-(\d\d)/.exec(location.search);
     var nu = TEST ? new Date(+TEST[1], TEST[2] - 1, +TEST[3]) : new Date();
