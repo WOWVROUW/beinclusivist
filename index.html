@@ -37,11 +37,13 @@
   header.top .wrap{display:flex;justify-content:space-between;align-items:center;padding-top:18px;padding-bottom:18px}
 
   /* Golvenpatroon zoals op de rug van de kaart: lichtere halve bogen, effen vlak in het midden */
-  .hero{background:var(--oranje) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='68'%3E%3Cpath d='M3 58A63 56 0 0 1 129 58Z' fill='%23FF6D2E'/%3E%3C/svg%3E") center top/132px 68px repeat;
+  .hero{background:var(--oranje) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='132' height='68'%3E%3Cpath d='M3 58A63 56 0 0 1 129 58Z' fill='%23FF6D2E'/%3E%3C/svg%3E") calc(50% - 66px) 4px/132px 68px repeat;
     color:var(--aubergine);padding:136px 0;overflow:hidden}
+  /* Wit blok: breedte in hele boogparen, hoogte in hele rijen (script onderaan), zodat er nergens een halve boog staat */
   .hero h1{color:var(--oranje)}
   .hero .wrap{background:var(--wit);padding:40px 44px 48px;border-radius:4px;
-    display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+    width:calc(100% - 132px);width:round(down,100% - 132px,264px);max-width:1056px;
+    display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center;align-content:center}
   .hero h1{font-weight:800;font-size:clamp(44px,7vw,84px);line-height:.95;text-transform:uppercase;letter-spacing:-.01em}
   .hero .thema{margin-top:20px;font-weight:600;font-size:20px}
   .hero p.lead{margin-top:18px;font-size:21px;max-width:30em}
@@ -108,7 +110,7 @@
   @media (max-width:820px){
     .hero .wrap,.hoe .grid{grid-template-columns:1fr}
     .hero{padding:68px 0}
-    .hero .wrap{padding:28px 22px 36px}
+    .hero .wrap{padding:28px 22px 36px;width:100%}
     .ringen ol{grid-template-columns:1fr 1fr}
   }
   @media (max-width:460px){ .ringen ol{grid-template-columns:1fr} }
@@ -211,6 +213,22 @@
     <p>© 2026 Hiltje Oude Luttikhuis</p>
   </div>
 </footer>
+
+<script>
+  /* Hero: hoogte van het witte blok afronden op hele boogrijen (68 px), zodat het patroon onderaan niet halverwege stopt. */
+  (function(){
+    var blok = document.querySelector('.hero .wrap');
+    function lijnUit(){
+      blok.style.minHeight = '';
+      var h = blok.getBoundingClientRect().height;
+      blok.style.minHeight = (Math.ceil((h - 0.5) / 68) * 68) + 'px';
+    }
+    lijnUit();
+    window.addEventListener('resize', lijnUit);
+    window.addEventListener('load', lijnUit);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(lijnUit);
+  })();
+</script>
 
 <script>
   /* Kaartentrekker. Kaart n verschijnt op 25 november + (n-1) dagen. Een kaart komt pas in het deck
